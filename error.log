@@ -1,0 +1,65 @@
+2021-04-07 23:49:38,744 - ERROR - weibo.py[:1112] - 'id'
+Traceback (most recent call last):
+  File "D:\code\weibo-master\src\main\python\weibo.py", line 1080, in get_pages
+    self.print_user_info()
+  File "D:\code\weibo-master\src\main\python\weibo.py", line 590, in print_user_info
+    logger.info(u'用户id：%s', self.user['id'])
+KeyError: 'id'
+2021-04-07 23:54:56,750 - ERROR - weibo.py[:1112] - 'id'
+Traceback (most recent call last):
+  File "D:\code\weibo-master\src\main\python\weibo.py", line 1080, in get_pages
+    self.print_user_info()
+  File "D:\code\weibo-master\src\main\python\weibo.py", line 590, in print_user_info
+    logger.info(u'用户id：%s', self.user['id'])
+KeyError: 'id'
+2021-04-07 23:58:02,587 - ERROR - weibo.py[:1112] - 'id'
+Traceback (most recent call last):
+  File "D:\code\weibo-master\src\main\python\weibo.py", line 1080, in get_pages
+    self.print_user_info()
+  File "D:\code\weibo-master\src\main\python\weibo.py", line 590, in print_user_info
+    logger.info(u'用户id：%s', self.user['id'])
+KeyError: 'id'
+2021-04-08 00:00:22,239 - ERROR - weibo.py[:1112] - 'id'
+Traceback (most recent call last):
+  File "D:\code\weibo-master\src\main\python\weibo.py", line 1080, in get_pages
+    self.print_user_info()
+  File "D:\code\weibo-master\src\main\python\weibo.py", line 590, in print_user_info
+    logger.info(u'用户id：%s', self.user['id'])
+KeyError: 'id'
+2021-04-08 00:04:08,587 - ERROR - weibo.py[:1112] - 'id'
+Traceback (most recent call last):
+  File "D:\code\weibo-master\src\main\python\weibo.py", line 1080, in get_pages
+    self.print_user_info()
+  File "D:\code\weibo-master\src\main\python\weibo.py", line 590, in print_user_info
+    logger.info(u'用户id：%s', self.user['id'])
+KeyError: 'id'
+2021-04-08 08:47:31,435 - ERROR - weibo.py[:675] - 'NoneType' object has no attribute 'xpath'
+Traceback (most recent call last):
+  File "D:\code\weibo-master\src\main\python\weibo.py", line 670, in get_one_weibo
+    weibo = self.parse_weibo(weibo_info)
+  File "D:\code\weibo-master\src\main\python\weibo.py", line 569, in parse_weibo
+    weibo['text'] = etree.HTML(text_body).xpath('string(.)')
+AttributeError: 'NoneType' object has no attribute 'xpath'
+2021-04-08 17:55:46,736 - ERROR - weibo.py[:1113] - time data '刘强东' does not match format '%Y-%m-%d'
+Traceback (most recent call last):
+  File "D:\code\weibo-master\src\main\python\weibo.py", line 1083, in get_pages
+    '%Y-%m-%d')
+  File "D:\software\python37\lib\_strptime.py", line 577, in _strptime_datetime
+    tt, fraction, gmtoff_fraction = _strptime(data_string, format)
+  File "D:\software\python37\lib\_strptime.py", line 359, in _strptime
+    (data_string, format))
+ValueError: time data '刘强东' does not match format '%Y-%m-%d'
+2021-04-08 17:59:08,061 - ERROR - weibo.py[:676] - 'NoneType' object has no attribute 'xpath'
+Traceback (most recent call last):
+  File "D:\code\weibo-master\src\main\python\weibo.py", line 671, in get_one_weibo
+    weibo = self.parse_weibo(weibo_info)
+  File "D:\code\weibo-master\src\main\python\weibo.py", line 570, in parse_weibo
+    weibo['text'] = etree.HTML(text_body).xpath('string(.)')
+AttributeError: 'NoneType' object has no attribute 'xpath'
+2021-04-08 17:59:09,160 - ERROR - weibo.py[:676] - 'NoneType' object has no attribute 'xpath'
+Traceback (most recent call last):
+  File "D:\code\weibo-master\src\main\python\weibo.py", line 671, in get_one_weibo
+    weibo = self.parse_weibo(weibo_info)
+  File "D:\code\weibo-master\src\main\python\weibo.py", line 570, in parse_weibo
+    weibo['text'] = etree.HTML(text_body).xpath('string(.)')
+AttributeError: 'NoneType' object has no attribute 'xpath'

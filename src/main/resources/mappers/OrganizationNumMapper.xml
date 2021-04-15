@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gr.geias.mapper.OrganizationNumMapper">
+
+    <select id="getSextSum" resultType="com.gr.geias.entity.SexCnt">
+        select replace(replace(gender, 'f', '女'), 'm', '男') as sex, count(1) as cnt from tb_weibo_user group by sex
+    </select>
+
+    <select id="getCItytSum" resultType="com.gr.geias.entity.CityCnt">
+        select substring_index(location, ' ', 1) city, count(0) cnt from tb_weibo_user group by substring_index(location, ' ', 1)
+    </select>
+
+    <select id="getTimeSum" resultType="com.gr.geias.entity.TimeCnt">
+        select substring_index(created_at, ' ', 1) as dt, count(1) as cnt from tb_weibo_data group by substring_index(created_at, ' ', 1) having dt like '%2021-03%'
+    </select>
+
+</mapper>

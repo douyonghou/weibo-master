@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html class="x-admin-sm">
+
+<head>
+    <meta charset="UTF-8">
+    <title>用户画像系统</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
+    <link rel="stylesheet" href="/css/font.css">
+    <link rel="stylesheet" href="/css/xadmin.css">
+    <script type="text/javascript" src="/js/jquery.min.js"></script>
+    <script src="/lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="/js/xadmin.js"></script>
+</head>
+
+<body>
+<div class="x-nav">
+    <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right"
+       onclick="location.reload()" title="刷新">
+        <i class="layui-icon layui-icon-refresh" style="line-height:30px"></i>
+    </a>
+</div>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-body ">
+
+                </div>
+                <div class="layui-card-header">
+
+                </div>
+                <div class="layui-card-body ">
+                    <table class="layui-table layui-form" style="width: 1100px">
+                        <thead>
+                        <tr>
+                            <th>用户ID</th>
+                            <th>昵称</th>
+                            <th>性别</th>
+                            <th>所在地</th>
+                            <th>微博数</th>
+                            <th>粉丝数</th>
+                            <th>关注数</th>
+                            <th>微博等级</th>
+                        </tr>
+                        </thead>
+                        <tbody id="list" style="width: 80%">
+
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="layui-card-body ">
+                    <div class="page">
+                        <div id="page">
+                            <div id="pagecount"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+
+    $(function () {
+        getlist();
+
+        function getlist() {
+            var url = '/employmentinformation/getemploymentinfo';
+            $.ajax({
+                url: url,
+                type: "get",
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    if (data.success) {
+                        setlist(data);
+                    } else {
+                        layer.alert(data.errMsg, {
+                            icon: 6
+                        });
+                    }
+                }
+            });
+        }
+
+        function setlist(data) {
+            var html = '';
+            data.List.map(function (item, index) {
+                html += '<tr>\n' +
+                    '<td>' + item.id + '</td>\n' +
+                    '<td>' + item.screenName + '</td>\n' +
+                    '<td>' + genderto(item.gender) + '</td>\n' +
+                    '<td>' + item.location + '</td>\n' +
+                    '<td>' + item.statusesCount + '</td>\n' +
+                    '<td>' + item.followersCount + '</td>\n' +
+                     '<td>' + item.followCount + '</td>\n' +
+                    '<td>' + item.urank + '</td>\n' +
+                    '</tr>'
+            });
+            $("#list").html(html);
+        }
+
+         function genderto(gender) {
+            if (gender == 'm') {
+                return '男';
+            } else if (gender == 'f') {
+                return '女';
+            }
+            return '';
+         }
+
+
+
+//:selected
+        layui.use(['laydate', 'form'],
+            function () {
+                var laydate = layui.laydate;
+
+                //执行一个laydate实例
+                laydate.render({
+                    elem: '#start' //指定元素
+                });
+
+                //执行一个laydate实例
+                laydate.render({
+                    elem: '#end' //指定元素
+                });
+            });
+
+    });
+</script>
+
+</html>

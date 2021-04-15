@@ -1,0 +1,9 @@
+2021-04-07 23:10:52,321 - ERROR - weibo.py[:1200] - [Errno 2] No such file or directory: 'D:\\code\\weibo-master\\src\\main\\python\\5782957659'
+Traceback (most recent call last):
+  File "D:\code\weibo-master\src\main\python\weibo.py", line 1197, in main
+    wb = Weibo(config, uid)
+  File "D:\code\weibo-master\src\main\python\weibo.py", line 71, in __init__
+    user_config_list = self.get_user_config_list(user_id_list)
+  File "D:\code\weibo-master\src\main\python\weibo.py", line 1116, in get_user_config_list
+    with open(file_path, 'rb') as f:
+FileNotFoundError: [Errno 2] No such file or directory: 'D:\\code\\weibo-master\\src\\main\\python\\5782957659'

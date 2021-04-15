@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html class="x-admin-sm">
+<head>
+    <meta charset="UTF-8">
+    <title>微博用户画像系统</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
+    <link rel="stylesheet" href="/css/font.css">
+    <link rel="stylesheet" href="/css/xadmin.css">
+    <script type="text/javascript" src="/js/jquery.min.js"></script>
+    <script type="module" src="/lib/layui/layui.js" charset="utf-8"></script>
+    <script src="https://cdn.bootcss.com/echarts/4.2.1-rc1/echarts.min.js"/>
+    <script src="/js/echarts-wordcloud.js"></script>
+    <script type="text/javascript" src="/js/xadmin.js"></script>
+    <!--[if lt IE 9]>
+    <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+    <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+
+        <div class="layui-col-sm12 layui-col-md6">
+            <div class="layui-card">
+                <div class="layui-card-header">用户性别占比</div>
+                <div class="layui-card-body" style="min-height: 250px;">
+                    <div id="main1" class="layui-col-sm12" style="height: 250px;"></div>
+
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-sm12 layui-col-md6">
+            <div class="layui-card">
+                <div class="layui-card-header">用户区域分布</div>
+                <div class="layui-card-body" style="min-height: 250px;">
+                    <div id="main2" class="layui-col-sm12" style="height: 250px;"></div>
+
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-sm12 layui-col-md6">
+            <div class="layui-card">
+                <div class="layui-card-header">发布数量时间分布</div>
+                <div class="layui-card-body" style="min-height: 250px;">
+                    <div id="main3" class="layui-col-sm12" style="height: 250px;"></div>
+
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-sm12 layui-col-md6">
+            <div class="layui-card">
+                <div class="layui-card-header">各单位就业数量</div>
+                <div class="layui-card-body" style="min-height: 250px;">
+                    <div id="main4" class="layui-col-sm12" style="height: 250px;"></div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<script type="text/javascript">
+
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('main1'));
+    var yijiuye = 0;
+    var weijiuye = 0;
+    var url = '/welcome/getcountbyarea';
+    $.ajax({
+        url: url,
+        type: "get",
+        dataType: "json",
+        async: false,
+        success: function (data) {
+            if (data.success) {
+                yijiuye = data.yijiuye;
+                weijiuye = data.weijiuye;
+            } else {
+                layer.alert(data.errMsg, {
+                    icon: 6
+                });
+            }
+        }
+    });
+    // 指定图表的配置项和数据
+    option = {
+        tooltip: {
+            trigger: 'item',
+            formatter: '{a} <br/>{b}: {c} ({d}%)'
+        },
+        legend: {
+            orient: 'vertical',
+            left: 10,
+            data: ['男', '女']
+        },
+        series: [
+            {
+                name: '性别占比',
+                type: 'pie',
+                radius: ['50%', '70%'],
+                avoidLabelOverlap: false,
+                label: {
+                    normal: {
+                        show: false,
+                        position: 'center'
+                    },
+                    emphasis: {
+                        show: true,
+                        textStyle: {
+                            fontSize: '30',
+                            fontWeight: 'bold'
+                        }
+                    }
+                },
+                labelLine: {
+                    normal: {
+                        show: false
+                    }
+                },
+                data: [
+                    {value: yijiuye, name: '男'},
+                    {value: weijiuye, name: '女'}
+                ]
+            }
+        ]
+    };
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option);
+
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('main2'));
+    var cityType =[];
+    var cityCnt =[];
+    var url = '/welcome/getcountbysalary';
+    $.ajax({
+        url: url,
+        type: "get",
+        dataType: "json",
+        async: false,
+        success: function (data) {
+            if (data.success) {
+                cityType = data.cityType;
+                cityCnt = data.cityCnt;
+            } else {
+                layer.alert(data.errMsg, {
+                    icon: 6
+                });
+            }
+        }
+    });
+    // 指定图表的配置项和数据
+    option = {
+        color: ['#3398DB'],
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'shadow'
+            }
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        xAxis: [
+            {
+                type: 'category',
+                data:  cityType,
+                axisTick: {
+                    alignWithLabel: true
+                }
+            }
+        ],
+        yAxis: [
+            {
+                type: 'value'
+            }
+        ],
+        series: [
+            {
+                name: '数量',
+                type: 'bar',
+                barWidth: '60%',
+                data: cityCnt
+            }
+        ]
+    };
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option);
+
+
+    // 基于准备好的dom，初始化echarts实例
+    var myChart =echarts.init(document.getElementById('main3'));
+    var timeType=[];
+    var timeCnt=[];
+    var url = '/welcome/getcountorgratio';
+    $.ajax({
+        url: url,
+        type: "get",
+        dataType: "json",
+        async: false,
+        success: function(result) {
+		    if (result.success) {
+                timeType = result.timeType;
+                timeCnt = result.timeCnt;
+            } else {
+                layer.alert(result.errMsg, {
+                    icon: 6
+                });
+            }
+        }
+    });
+
+    // 指定图表的配置项和数据
+	option = {
+
+         tooltip: {
+                trigger: 'axis'
+         },
+         legend: {
+                data:['发布数量(个)']
+          },
+         xAxis: {
+             type: 'category',
+             data: timeType,
+         },
+        yAxis: {
+            type: 'value',
+            axisLabel : {
+            formatter: '{value} 个'
+            }
+        },
+        series: [{
+            // 根据名字对应到相应的系列
+            data: timeCnt,
+            name: '发布数量(个)',
+            color:['#3399FF'],  //折线条的颜色
+            type: 'line',
+            markPoint : {
+                  data : [
+                   {type : 'max', name: '最大值'},
+                   {type : 'min', name: '最小值'}
+                    ]
+             },
+        }]
+    };
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option);
+
+
+    // 基于准备好的dom，初始化echarts实例
+
+	 var JosnList = [
+            {name: "龙头镇", value: "111"},
+            {name: "大埔镇", value: "222"},
+            {name: "太平镇", value: "458"},
+            {name: "沙埔镇", value: "445"},
+            {name: "东泉镇", value: "456"},
+            {name: "凤山镇", value: "647"},
+            {name: "六塘镇", value: "189"},
+            {name: "冲脉镇", value: "864"},
+            {name: "寨隆镇", value: "652"},
+        ];
+      var optionFour = {
+
+          tooltip: {
+              show: true
+          },
+          series: [{
+              name: '项目分析',
+              type: 'wordCloud',
+              sizeRange: [10, 50],//文字范围
+              //文本旋转范围，文本将通过rotationStep45在[-90,90]范围内随机旋转
+              rotationRange: [-45, 90],
+              rotationStep: 45,
+              textRotation: [0, 45, 90, -45],
+              //形状
+              shape: 'circle',
+              textStyle: {
+                  normal: {
+                      color: function() {//文字颜色的随机色
+                          return 'rgb(' + [
+                              Math.round(Math.random() * 250),
+                              Math.round(Math.random() * 250),
+                              Math.round(Math.random() * 250)
+                          ].join(',') + ')';
+                      }
+                  },
+                  //悬停上去的字体的阴影设置
+                  emphasis: {
+                      shadowBlur: 10,
+                      shadowColor: '#333'
+                  }
+              },
+              data: JosnList
+          }]
+      };
+     //使用制定的配置项和数据显示图表
+	 var myChart = echarts.init(document.getElementById('main4'));
+	 // 使用刚指定的配置项和数据显示图表。
+     myChart.setOption(optionFour);
+
+</script>
+</body>
+</html>
