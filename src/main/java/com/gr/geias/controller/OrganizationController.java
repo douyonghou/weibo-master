@@ -9,6 +9,8 @@ import com.gr.geias.entity.PersonInfo;
 import com.gr.geias.entity.Specialty;
 import com.gr.geias.enums.EnableStatusEnums;
 import com.gr.geias.service.*;
+import com.gr.geias.util.JsonUtils;
+import org.python.util.PythonInterpreter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,8 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.*;
 
 /**
@@ -268,10 +269,10 @@ public class OrganizationController {
         }
         PersonInfo person = (PersonInfo) request.getSession().getAttribute("person");
         Specialty specialty = new Specialty();
-        if (person.getEnableStatus()==EnableStatusEnums.PREXY.getState()){
+        if (person.getEnableStatus() == EnableStatusEnums.PREXY.getState()) {
             specialty.setCollegeId(person.getCollegeId());
         }
-        if (person.getEnableStatus()==EnableStatusEnums.schoolmaster.getState()){
+        if (person.getEnableStatus() == EnableStatusEnums.schoolmaster.getState()) {
             specialty.setCollegeId(collegeId);
         }
         specialty.setSpecialtyName(specialtyName);
@@ -624,24 +625,27 @@ public class OrganizationController {
         personInfo.setUsername(username);
         personInfo.setPersonName(personName);
         try {
-            // 调用python执行采集任务
-            String[] arguments = new String[] {"python", "src/main/python/getuid.py", personName};
+
             Boolean aBoolean = personInfoService.insertCaiji(personInfo);
-
-
-
-//            String[] envp = new String[] {"path=D:/software/python37"};
             try {
-//                Process process = Runtime.getRuntime().exec(arguments, envp);
-                Process process = Runtime.getRuntime().exec(arguments);
-                BufferedReader in = new BufferedReader(new InputStreamReader(process.getInputStream(), "GBK") );
-                String line = null;
-                while ((line = in.readLine()) != null) {
-                    System.out.println(line);
+                try {
+                    // 调用python执行采集任务
+                    String name = "窦永厚";
+                    JsonUtils.updataJson("since_date", username);
+                    String[] args1 = new String[] { "python", "src/main/python/getuid.py", String.valueOf(personName) };
+                    Process proc = Runtime.getRuntime().exec(args1);
+                    BufferedReader in = new BufferedReader(new InputStreamReader(proc.getInputStream(), "gbk"));
+                    String line = null;
+                    while ((line = in.readLine()) != null) {
+                        System.out.println(line);
+                    }
+                    in.close();
+                    proc.waitFor();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
-                in.close();
-                int re = process.waitFor();
-                System.out.println(re);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -653,7 +657,7 @@ public class OrganizationController {
                 map.put("errMsg", "启动失败");
             }
             return map;
-        }catch (Exception e){
+        } catch (Exception e) {
             map.put("success", false);
             map.put("errMsg", "任务已经启动");
             return map;
@@ -811,7 +815,7 @@ public class OrganizationController {
                 map.put("errMsg", "添加失败");
             }
             return map;
-        }catch (Exception e){
+        } catch (Exception e) {
             map.put("success", false);
             map.put("errMsg", "登录名重复,请修改后重试");
             return map;
@@ -848,11 +852,11 @@ public class OrganizationController {
 
             }
             return map;
-        }catch (Exception e){
-        map.put("success", false);
-        map.put("errMsg", "登录名重复,请修改后重试");
-        return map;
-    }
+        } catch (Exception e) {
+            map.put("success", false);
+            map.put("errMsg", "登录名重复,请修改后重试");
+            return map;
+        }
     }
 
     /**
@@ -882,29 +886,30 @@ public class OrganizationController {
     }
 
     /**
-     *  获取组织架构图所需数据 权限 1，2
+     * 获取组织架构图所需数据 权限 1，2
+     *
      * @return
      */
     @RequestMapping("/getorganizationinfo")
-    public Map<String,Object> getOrganizationInfo(){
+    public Map<String, Object> getOrganizationInfo() {
         List<College> collegeList = collegeService.getCollege(null);
-        Map<String,Object> school = new HashMap<>(4);
+        Map<String, Object> school = new HashMap<>(4);
         school.put("name", "XXX大学");
         school.put("symbolSize", 100);
         school.put("draggable", true);
         school.put("value", 27);
         school.put("x", 0);
         school.put("y", 0);
-        Map<String,Object> map = new HashMap<>(5);
-        List<Map<String,Object>> data = new ArrayList<>();
+        Map<String, Object> map = new HashMap<>(5);
+        List<Map<String, Object>> data = new ArrayList<>();
         List<String> nameList = new ArrayList<>();
-        List<Map<String,Object>> links = new ArrayList<>();
-        List<Map<String,Object>> categories = new ArrayList<>();
+        List<Map<String, Object>> links = new ArrayList<>();
+        List<Map<String, Object>> categories = new ArrayList<>();
         data.add(school);
         for (int i = 0; i < collegeList.size(); i++) {
-            Map<String,Object> collegeOrganization = new HashMap<>(7);
-            Map<String,Object> collegeLinks = new HashMap<>(2);
-            Map<String,Object> collegeCategories = new HashMap<>(1);
+            Map<String, Object> collegeOrganization = new HashMap<>(7);
+            Map<String, Object> collegeLinks = new HashMap<>(2);
+            Map<String, Object> collegeCategories = new HashMap<>(1);
             College college = collegeList.get(i);
             collegeOrganization.put("name", college.getCollegeName());
             collegeOrganization.put("symbolSize", 60);
@@ -921,10 +926,10 @@ public class OrganizationController {
             categories.add(collegeCategories);
             nameList.add(college.getCollegeName());
             List<Specialty> specialtyList = specialtyService.getSpecialty(college.getCollegeId());
-            for (int j = 0; j <specialtyList.size(); j++) {
+            for (int j = 0; j < specialtyList.size(); j++) {
                 Specialty specialty = specialtyList.get(j);
-                Map<String,Object> specialtyOrganization = new HashMap<>(5);
-                Map<String,Object> specialtyLinks = new HashMap<>(2);
+                Map<String, Object> specialtyOrganization = new HashMap<>(5);
+                Map<String, Object> specialtyLinks = new HashMap<>(2);
                 specialtyOrganization.put("name", specialty.getSpecialtyName());
                 specialtyOrganization.put("symbolSize", 30);
                 specialtyOrganization.put("draggable", true);
@@ -941,33 +946,50 @@ public class OrganizationController {
         }
         map.put("success", true);
         map.put("data", data);
-        map.put("links",links);
-        map.put("categories",categories);
+        map.put("links", links);
+        map.put("categories", categories);
         map.put("nameList", nameList);
         return map;
     }
 
     public static void main(String[] args) {
-        String[] arguments = new String[] {"python", "src/main/python/getuid.py", "窦永厚"};
-        String[] arguments1 = new String[] {"python", "src/main/python/ciyun_data.py"};
-
-
-
-//            String[] envp = new String[] {"path=D:/software/python37"};
+      /*  String[] arguments = new String[] {"python", "src/main/python/getuid.py", "窦永厚"};
+            String[] envp = new String[] {"path=D:/software/python37"};
         try {
-//                Process process = Runtime.getRuntime().exec(arguments, envp);
-            Process process = Runtime.getRuntime().exec(arguments);
+                Process process = Runtime.getRuntime().exec(arguments, envp);
+//            Process process = Runtime.getRuntime().exec(arguments);
             BufferedReader in = new BufferedReader(new InputStreamReader(process.getInputStream(), "GBK") );
-            String line = null;
-            while ((line = in.readLine()) != null) {
-                System.out.println(line);
-            }
+//            String line = null;
+//            while ((line = in.readLine()) != null) {
+//                System.out.println(line);
+//            }
             in.close();
             int re = process.waitFor();
             System.out.println(re);
         } catch (Exception e) {
             e.printStackTrace();
         }
+*/
+
+
+
+        try {
+            String name = "窦永厚";
+            String[] args1 = new String[] { "python", "src/main/python/getuid.py", String.valueOf(name) };
+            Process proc = Runtime.getRuntime().exec(args1);
+            BufferedReader in = new BufferedReader(new InputStreamReader(proc.getInputStream(), "gbk"));
+            String line = null;
+            while ((line = in.readLine()) != null) {
+                System.out.println(line);
+            }
+            in.close();
+            proc.waitFor();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
 
     }
 }

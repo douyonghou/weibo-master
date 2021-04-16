@@ -11,13 +11,11 @@
     <link rel="stylesheet" href="/css/xadmin.css">
     <script type="text/javascript" src="/js/jquery.min.js"></script>
     <script type="module" src="/lib/layui/layui.js" charset="utf-8"></script>
-    <script src="https://cdn.bootcss.com/echarts/4.2.1-rc1/echarts.min.js"/>
+        <script src="https://cdn.bootcss.com/echarts/4.2.1-rc1/echarts.min.js"></script>
     <script src="/js/echarts-wordcloud.js"></script>
     <script type="text/javascript" src="/js/xadmin.js"></script>
-    <!--[if lt IE 9]>
     <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
     <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
 </head>
 <body>
 <div class="layui-fluid">
@@ -52,10 +50,11 @@
         </div>
         <div class="layui-col-sm12 layui-col-md6">
             <div class="layui-card">
-                <div class="layui-card-header">各单位就业数量</div>
+                <div class="layui-card-header">热词展示</div>
                 <div class="layui-card-body" style="min-height: 250px;">
-                    <div id="main4" class="layui-col-sm12" style="height: 250px;"></div>
-
+                    <div class="layui-col-sm12" style="height: 250px;">
+                        <img src='../images/44.png' title='Pets Care Image' style='width: 512px;height: 250px;' />
+                    </div>
                 </div>
             </div>
         </div>
@@ -63,6 +62,21 @@
 </div>
 </div>
 <script type="text/javascript">
+
+    function loadImage(url,callback) {
+        var img =new Image();
+        img.onload =function(){
+            img.onload ="javascript:if(this.width>520){this.width=520,this.width=210}";
+            callback(img);
+        }
+        img.src = url;
+    }
+
+    function call(img){
+        $(img).appendTo('.box');
+    }
+    var version = Math.random();
+    loadImage('/images/44.png?'+version,call);
 
     // 基于准备好的dom，初始化echarts实例
     var myChart = echarts.init(document.getElementById('main1'));

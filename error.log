@@ -63,3 +63,23 @@ Traceback (most recent call last):
   File "D:\code\weibo-master\src\main\python\weibo.py", line 570, in parse_weibo
     weibo['text'] = etree.HTML(text_body).xpath('string(.)')
 AttributeError: 'NoneType' object has no attribute 'xpath'
+2021-04-15 22:16:23,328 - ERROR - weibo.py[:1112] - [Errno 22] Invalid argument
+Traceback (most recent call last):
+  File "D:\code\weibo-master\src\main\python\weibo.py", line 1091, in get_pages
+    for page in tqdm(pages, desc='Progress'):
+  File "D:\software\python37\lib\site-packages\tqdm\_tqdm.py", line 945, in __init__
+    self.display()
+  File "D:\software\python37\lib\site-packages\tqdm\_tqdm.py", line 1335, in display
+    self.sp(self.__repr__() if msg is None else msg)
+  File "D:\software\python37\lib\site-packages\tqdm\_tqdm.py", line 250, in print_status
+    fp_write('\r' + s + (' ' * max(last_len[0] - len_s, 0)))
+  File "D:\software\python37\lib\site-packages\tqdm\_tqdm.py", line 244, in fp_write
+    fp_flush()
+OSError: [Errno 22] Invalid argument
+2021-04-15 23:40:40,491 - ERROR - weibo.py[:1112] - 'id'
+Traceback (most recent call last):
+  File "D:\code\weibo-master\src\main\python\weibo.py", line 1080, in get_pages
+    self.print_user_info()
+  File "D:\code\weibo-master\src\main\python\weibo.py", line 590, in print_user_info
+    logger.info(u'用户id：%s', self.user['id'])
+KeyError: 'id'
